@@ -8,7 +8,7 @@ https://github.com/simontabor/jquery-toggles / http://simontabor.com/labs/toggle
 
   var factory = function($) {
 
- 
+
 
     $.fn['toggles'] = function(opts) {
       return this.each(function() {
