@@ -132,7 +132,7 @@ function getflitersch(tx) {
 
 
     var sql = "select fliterON,isadmin,allowscore,allowcancel,Clubedit,Ref from MobileApp_LastUpdatesec";
-    //alert(sql);
+    alert(sql);
     tx.executeSql(sql, [], getflitersch_success);
 
 
@@ -144,7 +144,7 @@ function getflitersch_success(tx, results) {
     $('#busy').hide();
     var len = results.rows.length;
 
-
+    alert(len);
     if(len != 0) {
         var menu = results.rows.item(0);
         fliter = menu.fliterON;

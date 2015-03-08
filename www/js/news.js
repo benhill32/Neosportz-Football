@@ -14,17 +14,44 @@ document.addEventListener("deviceready", onDeviceReadynews, false);
 function onDeviceReadynews() {
   //  db = window.openDatabase("Neosportz_Football", "1.1", "Neosportz_Football", 200000);
     console.log("LOCALDB - Database ready");
-    db.transaction(getadmin, errorCBfunc, successCBfunc);
+    db.transaction(getdatanews1, errorCBfunc, successCBfunc);
 
   //  checkfb();
 }
 //db.transaction(getadmin, errorCBfunc, successCBfunc);
 
+function getdatanews1(tx) {
+    var sql = "select ID from MobileApp_clubs where Fav = 1";
+    //alert(sql);
+    tx.executeSql(sql, [], getClubID_success1);
+}
+
+function getClubID_success1(tx, results) {
+    $('#busy').hide();
+    var len = results.rows.length;
+
+
+    if(len != 0) {
+        var menu = results.rows.item(0);
+        clubidtop = menu.ID;
+        //  db.transaction(getdata2, errorCBfunc, successCBfunc);
+        db.transaction(getadmin, errorCBfunc, successCBfunc);
+        db.transaction(numbersponsers, errorCBfunc, successCBfunc);
+
+    }else{
+
+        showclubsfun();
+    }
+
+
+}
+
+
 
 
 function getadmin(tx) {
 
-    var sql = "select isadmin from MobileApp_LastUpdatesec";
+    var sql = "select allownewfeed,Clubedit,isadmin from MobileApp_LastUpdatesec";
     //alert(sql);
     tx.executeSql(sql, [], getadmin_success);
 }
@@ -37,54 +64,23 @@ function getadmin_success(tx, results) {
 
       if(len != 0) {
         var menu = results.rows.item(0);
-        if(menu.isadmin ==1){
-            $('#loadnews').empty();
-            $('#loadnews').append('<img src="../img/plus2.png"  style="height:30px;" title="Add New Feed">' +'</Div>');
-            $('#loadnews').click(function(){
-                weblink('../pages/addnewfeed.html')
-            });
-        }
+          if(menu.allownewfeed ==1 && menu.Clubedit == clubidtop){
+              $('#loadnews').empty();
+              $('#loadnews').append('<img src="../img/plus2.png"  style="height:30px;" title="Add New Feed">' +'</Div>');
+              $('#loadnews').click(function(){
+                  weblink('../pages/addnewfeed.html')
+              });
+          }else if (menu.isadmin ==1){
+              $('#loadnews').empty();
+              $('#loadnews').append('<img src="../img/plus2.png"  style="height:30px;" title="Add New Feed">' +'</Div>');
+              $('#loadnews').click(function(){
+                  weblink('../pages/addnewfeed.html')
+              });
+          }
     }
 
 
-    db.transaction(getdatanews, errorCBfunc, successCBfunc);
-}
 
-
-
-
-function checkfb(){
-
-    if(device.platform == "iOS"){
-        appAvailability.check(
-            'fb://', // URI Scheme
-            function() {           // Success callback
-               // alert("facebook is available");
-                facebookchk = 1;
-            },
-            function() {           // Error callback
-              //  alert("facebook is not available");
-                facebookchk = 0;
-            }
-        );
-
-    }else  if(device.platform == "Android"){
-        appAvailability.check(
-            'com.facebook.katana', // URI Scheme
-            function() {           // Success callback
-               // alert("facebook is available");
-                facebookchk = 1;
-            },
-            function() {           // Error callback
-               // alert("facebook is not available");
-                facebookchk = 0;
-            }
-        );
-
-    }else{
-
-
-    }
 }
 
 
@@ -92,11 +88,11 @@ function checkfb(){
 
 
 
-function getdatanews(tx) {
-    var sql = "select ID from MobileApp_clubs where Fav = 1";
-    //alert(sql);
-    tx.executeSql(sql, [], getClubID_success);
-}
+
+
+
+
+
 
 
 function loadnewdata(){
@@ -111,24 +107,6 @@ function loadnewdata(){
 
 
 
-function getClubID_success(tx, results) {
-    $('#busy').hide();
-    var len = results.rows.length;
-
-
-    if(len != 0) {
-        var menu = results.rows.item(0);
-        clubidtop = menu.ID;
-      //  db.transaction(getdata2, errorCBfunc, successCBfunc);
-        db.transaction(numbersponsers, errorCBfunc, successCBfunc);
-
-     }else{
-
-        showclubsfun();
-    }
-
-
-}
 
 
 function numbersponsers(tx) {
