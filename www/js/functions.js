@@ -236,11 +236,10 @@ function blankLastUpdatesec(){
    // $('#busy').show();
     xmlHttp.open("GET", 'http://football.neosportz.com/registerdevice.aspx?deviceID=' + deviceIDfunc + '&devicemodel=' + devicemodelfunc + '&deviceCordova=' + deviceCordovafunc + '&devicePlatform=' + devicePlatformfunc + '&deviceVersion=' + deviceVersionfunc + '&databasever=' + databaseversion + '&appver=' + appversion,false);
     xmlHttp.send();
-  //  alert('http://rugby.neosportz.com/registerdevice.aspx?deviceID=' + deviceIDfunc + '&devicemodel=' + devicemodelfunc + '&deviceCordova=' + deviceCordovafunc + '&devicePlatform=' + devicePlatformfunc + '&deviceVersion=' + deviceVersionfunc + '&databasever=' + databaseversion + '&appver=' + appversion);
-    var json = xmlHttp.responseText;
+     var json = xmlHttp.responseText;
 
     db.transaction(function(tx) {
-        tx.executeSql('INSERT INTO MobileApp_LastUpdatesec (Datesecs,datemenus,syncwifi,isadmin,token,hasclub,fliterON) VALUES ("0", "0",0,0,"' + json + '",0,0)');
+        tx.executeSql('INSERT INTO MobileApp_LastUpdatesec (Datesecs,datemenus,syncwifi,isadmin,token,hasclub,fliterON,allownewfeed ,allowcancel,allowscore,Clubedit,Ref) VALUES ("0", "0",0,0,"' + json + '",0,0,0,0,0,0,0)');
         console.log("INSERT INTO MobileApp_LastUpdatesec");
      //   alert('INSERT INTO MobileApp_LastUpdatesec (Datesecs,datemenus,syncwifi,isadmin,token,hasclub,fliterON) VALUES ("0", "0",0,0,"' + json + '",0,0)');
     });
@@ -260,7 +259,6 @@ function getregionsdata(tx, results) {
     var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", 'http://football.neosportz.com/databen.aspx?deviceID=' + deviceIDfunc + '&token=' + row.token + '&sec=' + datenowsecsync2 + '&start=1', false);
-   // alert('http://rugby.neosportz.com/databen.aspx?deviceID=' + deviceIDfunc + '&token=' + row.token + '&sec=' + datenowsecsync2 + '&start=1');
     xmlHttp.send();
 
     var json = xmlHttp.responseText;
@@ -719,9 +717,7 @@ function syncmaintables(obj,year){
 
         +
             db.transaction(function(tx) {
-                tx.executeSql('Update MobileApp_LastUpdatesec set isadmin= ' + obj.Isadmin + ', Datesecs = "' + Math.round((timenow/1000)) + '",datemenus= "' + datenow1 + '"');
-                //  console.log("Update INTO MobileApp_LastUpdatesec " + Math.round((timenow/1000)));
-              //  alert('Update MobileApp_LastUpdatesec set isadmin= ' + obj.Isadmin + ', Datesecs = "' + Math.round((timenow/1000)) + '",datemenus= "' + datenow1 + '"');
+                tx.executeSql('Update MobileApp_LastUpdatesec set isadmin= ' + obj.Isadmin + ',allownewfeed= ' + obj.allownewfeed + ',allowcancel= ' + obj.allowcancel + ',allowscore= ' + obj.allowscore + ',Clubedit= ' + obj.Clubedit + ',Ref= ' + obj.Ref + ', Datesecs = "' + Math.round((timenow/1000)) + '",datemenus= "' + datenow1 + '"');
 
                 if(datenow.getFullYear() == year){
                     closemodel();

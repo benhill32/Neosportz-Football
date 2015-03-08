@@ -9,7 +9,13 @@ var lat = 0;
 var long = 0;
 var isadmin = 0;
 var devicePlatformsch =0;
-
+var tokensch = 0;
+var allowscore = 0;
+var allowcancel= 0;
+var Clubedit= 0;
+var Ref= 0;
+var teamfollow = 0;
+var refgameid= 0;
 var remindtext = 0;
 var reminddate =0;
 var networkconnectionsch = 0;
@@ -18,26 +24,48 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     checkonlinesch();
+    devicePlatformsch = device.platform;
   //  db = window.openDatabase("Neosportz_Football", "1.1", "Neosportz_Football", 200000);
   //  console.log("LOCALDB - Database ready");
    //  navigator.geolocation.getCurrentPosition(getgeolocation, onError);
-    db.transaction(getfliter, errorCBfunc, successCBfunc);
-    $(".tooltip").draggable("enable");
-    devicePlatformsch = device.platform;
+    db.transaction(gettokensc, errorCBfunc, successCBfunc);
+    db.transaction(getdatanewssch, errorCBfunc, successCBfunc);
+    db.transaction(getflitersch, errorCBfunc, successCBfunc);
+
+
 }
-//function updateadmin() {
-//    db.transaction(function (tx) {
- //       tx.executeSql('Update MobileApp_LastUpdatesec set isadmin = 1');
-//        console.log("Update INTO MobileApp_LastUpdatesec");
- //   });
 
-//}
-//db.transaction(getfliter, errorCBfunc, successCBfunc);
+function gettokensc(tx) {
+    var sql = "select token from MobileApp_LastUpdatesec";
+    //  alert(sql);
+    tx.executeSql(sql, [], gettokensc_success);
+}
 
-//db.transaction(function(tx) {
-//   tx.executeSql('Update MobileApp_LastUpdatesec set isadmin = 1');
-//    console.log("Update MobileApp_LastUpdatesec");
-//});
+function gettokensc_success(tx, results) {
+    $('#busy').hide();
+    var len = results.rows.length;
+    var menu = results.rows.item(0);
+
+    tokensch = menu.token;
+
+}
+
+function getdatanewssch(tx) {
+    var sql = "select ID from MobileApp_clubs where Fav = 1";
+    //alert(sql);
+    tx.executeSql(sql, [], getdatanewssch_success);
+}
+
+function getdatanewssch_success(tx, results) {
+    $('#busy').hide();
+    var len = results.rows.length;
+
+
+    if(len != 0) {
+        var menu = results.rows.item(0);
+        teamfollow = menu.ID;
+    }
+}
 
 
 function checkonlinesch(){
@@ -91,28 +119,28 @@ function allowfilter(id){
         $('#btn2').removeClass("btn btn-xs btn-default");
         $('#btn2').addClass("btn btn-xs btn-primary active");
     }
-    db.transaction(getfliter, errorCBfunc, successCBfunc);
+    db.transaction(getflitersch, errorCBfunc, successCBfunc);
 
 }
 
 
 
 
-function getfliter(tx) {
+function getflitersch(tx) {
 
   //  updateadmin();
 
 
-    var sql = "select fliterON,isadmin from MobileApp_LastUpdatesec";
+    var sql = "select fliterON,isadmin,allowscore,allowcancel,Clubedit,Ref from MobileApp_LastUpdatesec";
     //alert(sql);
-    tx.executeSql(sql, [], getfliter_success);
+    tx.executeSql(sql, [], getflitersch_success);
 
 
 
 }
 
 
-function getfliter_success(tx, results) {
+function getflitersch_success(tx, results) {
     $('#busy').hide();
     var len = results.rows.length;
 
@@ -121,35 +149,17 @@ function getfliter_success(tx, results) {
         var menu = results.rows.item(0);
         fliter = menu.fliterON;
         isadmin = menu.isadmin;
+        allowscore = menu.allowscore;
+        allowcancel= menu.allowcancel;
+        Clubedit= menu.Clubedit;
+        Ref= menu.Ref;
     }
 
 
-    db.transaction(getdatanews, errorCBfunc, successCBfunc);
-}
-
-
-
-
-function getdatanews(tx) {
-    var sql = "select ID from MobileApp_clubs where Fav = 1";
-   // alert(sql);
-    tx.executeSql(sql, [], getClubID_success);
-}
-
-
-function getClubID_success(tx, results) {
-    $('#busy').hide();
-    var len = results.rows.length;
-    clubidtop = 0;
-
-    if(len != 0) {
-        var menu = results.rows.item(0);
-        clubidtop = menu.ID;
-
-    }
-
+ //   db.transaction(getdatanews, errorCBfunc, successCBfunc);
     db.transaction(getdata2, errorCBfunc, successCBfunc);
 }
+
 
 
 
@@ -170,7 +180,7 @@ function getdata2_success(tx, results) {
             listfollow = listfollow + menu.ID + ",";
         }
     }
-    listfollow =  listfollow + clubidtop + ","
+    listfollow =  listfollow + teamfollow + ","
 
     listfollow = listfollow.substr(0, listfollow.length - 1);
 
@@ -268,6 +278,46 @@ function getMenu_success(tx, results) {
     }
 }
 
+function loadreftosystem(Gameid1){
+    db.transaction(gettokensc, errorCBfunc, successCBfunc);
+
+    db.transaction(function (tx) {
+        tx.executeSql('Update MobileApp_Schedule set RefName = "' + $('#txtrefname').val() + '" where ID = ' + Gameid1);
+        console.log("Update INTO MobileApp_Results");
+    });
+
+    passscoretoserver("gameidref=" + Gameid1 + "&refname=" + $('#txtrefname').val() + "&deviceid=" + device.uuid + "&token=" + tokensch)
+    window.setTimeout(function(){
+        window.location = "../pages/schedules.html?id=" + id;
+    }, 1000);
+
+
+
+}
+
+function loadref(ID){
+
+    refgameid = ID;
+    db.transaction(loadinfo_ref, errorCBfunc, successCBfunc);
+}
+
+function loadinfo_ref(tx) {
+
+    var sql = "select RefName from MobileApp_Schedule where ID =" + refgameid;
+
+    //alert(sql);
+    tx.executeSql(sql, [], loadinfo_ref_success2);
+}
+
+function loadinfo_ref_success2(tx, results) {
+    var len = results.rows.length;
+    var menu = results.rows.item(0);
+    if(menu.RefName != 'null') {
+        $('#txtrefname').val(menu.RefName);
+    }
+}
+
+
 function loadinfo(ID) {
     IDhist = ID;
 //alert(ID);
@@ -302,7 +352,7 @@ function loadinfo_success2(tx, results) {
 
     $('#score').hide();
     $('#cancell').hide();
-
+    $('#referee').hide();
     // alert(("0" + (d.getMonth()+1)).slice(-2));
     $('#Directions').hide();
     if (day == d.getDate() && month == ("0" + (d.getMonth()+1)).slice(-2) && year == d.getFullYear()){
@@ -312,17 +362,63 @@ function loadinfo_success2(tx, results) {
             $("#score").click(function () {
                 window.open("scorecard.html?ID=" + IDhist +"&divID=" + id);
             });
-
             $('#cancell').show();
-
             $('#divmainheadercancel').empty().append('Do you want to cancel this game </br> ' + text2)
+            $('#referee').show();
+            $("#referee").click(function () {
+                loadref(menu.ID);
+            });
+            $("#modelfooterupdate").click(function () {
+                loadreftosystem(menu.ID);
+            });
 
+        }else {
+            if (allowcancel == 1 && (menu.HomeClubID == Clubedit || menu.AwayClubID == Clubedit)) {
+                if (menu.IsFinalScore == 0) {
+                    $('#cancell').show();
+                    $('#divmainheadercancel').empty().append('Do you want to cancel this game </br> ' + text2)
+                }
+            }
+            if (allowscore == 1 && (menu.HomeClubID == Clubedit || menu.AwayClubID == Clubedit)) {
+                if (menu.IsFinalScore == 0) {
+                    $('#score').show();
+                    $('#score').empty().append('<Div >Score Card</div>');
+                    $("#score").click(function () {
+                        window.open("scorecard.html?ID=" + IDhist + "&divID=" + id);
+                    });
+                    $('#referee').show();
+                    $("#referee").click(function () {
+                        loadref(menu.ID);
+                    });
+                    $("#modelfooterupdate").click(function () {
+                        loadreftosystem(menu.ID);
+                    });
 
+                }
+            }
+            if (Ref == 1) {
+                if (menu.IsFinalScore == 0) {
+                    $('#score').show();
+                    $('#score').empty().append('<Div >Score Card</div>');
+                    $("#score").click(function () {
+                        window.open("scorecard.html?ID=" + IDhist + "&divID=" + id);
+                    });
+                    $('#cancell').show();
+                    $('#divmainheadercancel').empty().append('Do you want to cancel this game </br> ' + text2)
+                    $('#referee').show();
+                    $("#referee").click(function () {
+                        loadref(menu.ID);
+                    });
+                    $("#modelfooterupdate").click(function () {
+                        loadreftosystem(menu.ID);
+                    });
+                }
+            }
         }
         $('#remind').hide();
 
     }else {
-
+        $('#referee').hide();
         $('#score').hide();
         $('#cancell').hide();
         $('#remind').show();
