@@ -132,7 +132,7 @@ function getflitersch(tx) {
 
 
     var sql = "select fliterON,isadmin,allowscore,allowcancel,Clubedit,Ref from MobileApp_LastUpdatesec";
-    alert(sql);
+   // alert(sql);
     tx.executeSql(sql, [], getflitersch_success);
 
 
@@ -144,7 +144,7 @@ function getflitersch_success(tx, results) {
     $('#busy').hide();
     var len = results.rows.length;
 
-    alert(len);
+   // alert(len);
     if(len != 0) {
         var menu = results.rows.item(0);
         fliter = menu.fliterON;
@@ -157,10 +157,29 @@ function getflitersch_success(tx, results) {
 
 
  //   db.transaction(getdatanews, errorCBfunc, successCBfunc);
-    db.transaction(getdata2, errorCBfunc, successCBfunc);
+    db.transaction(getdatanews, errorCBfunc, successCBfunc);
+}
+
+function getdatanews(tx) {
+    var sql = "select ID from MobileApp_clubs where Fav = 1";
+    // alert(sql);
+    tx.executeSql(sql, [], getClubID_success);
 }
 
 
+function getClubID_success(tx, results) {
+    $('#busy').hide();
+    var len = results.rows.length;
+    clubidtop = 0;
+
+    if(len != 0) {
+        var menu = results.rows.item(0);
+        clubidtop = menu.ID;
+
+    }
+
+    db.transaction(getdata2, errorCBfunc, successCBfunc);
+}
 
 
 function getdata2(tx) {
@@ -180,7 +199,7 @@ function getdata2_success(tx, results) {
             listfollow = listfollow + menu.ID + ",";
         }
     }
-    listfollow =  listfollow + teamfollow + ","
+    listfollow =  listfollow + clubidtop + ","
 
     listfollow = listfollow.substr(0, listfollow.length - 1);
 
@@ -346,7 +365,7 @@ function loadinfo_success2(tx, results) {
 
     var h = res[1].substring(0, 2)
     var d = new Date();
-
+    alert(isadmin + "- " + allowscore);
     var text =  menu.HomeName + ' vs ' + menu.AwayName +  "||" + menu.TournamentName + "||" + menu.Field;
     var text2 =menu.HomeName + ' vs ' + menu.AwayName;
 
