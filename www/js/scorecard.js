@@ -19,12 +19,39 @@ function onDeviceReady() {
     deviceIDscorecard = device.uuid;
   //  db = window.openDatabase("Neosportz_Football", "1.1", "Neosportz_Football", 200000);
   //  console.log("LOCALDB - Database ready");
-    db.transaction(getdata, errorCBfunc, successCBfunc);
-    db.transaction(getscoredata, errorCBfunc, successCBfunc);
+    db.transaction(getfliter1, errorCBfunc, successCBfunc);
     checkonlinescore()
 }
 
 
+function getfliter1(tx) {
+
+    //  updateadmin();
+
+    var sql = "select Ref,isadmin from MobileApp_LastUpdatesec";
+    //alert(sql);
+    tx.executeSql(sql, [], getfliter1_success);
+
+}
+
+
+function getfliter1_success(tx, results) {
+    $('#busy').hide();
+    var len = results.rows.length;
+
+
+    if(len != 0) {
+        var menu = results.rows.item(0);
+
+        Ref= menu.Ref;
+        isadmin = menu.isadmin;
+        db.transaction(getdata, errorCBfunc, successCBfunc);
+        db.transaction(getscoredata, errorCBfunc, successCBfunc);
+    }
+
+
+
+}
 
 function checkonlinescore(){
 
@@ -62,13 +89,13 @@ function getplayerinfo(tx) {
 
 function getscoredata(tx) {
     var sql = "select Name,Value,UpdatedateUTC from MobileScoringTable";
-   //  alert(sql);
+     alert(sql);
     tx.executeSql(sql, [], getscoredata_success);
 }
 
 
 function getdata(tx) {
-    var sql = "select ID,_id,DatetimeStart,HomeName,AwayName,Field,Latitude,Longitude,DivisionID ,DivisionName,HomeClubID,AwayClubID,HomeTeamID,AwayTeamID,HomeScore ,AwayScore ,UpdateDateUTC ,TournamentName,TournamentID ,DatetimeStartSeconds ,DivisionOrderID,ShowToAll,Final,halftime,fulltime from MobileApp_Results where ID = '" + id + "'";
+    var sql = "select ID,_id,DatetimeStart,HomeName,AwayName,Field,Latitude,Longitude,DivisionID ,DivisionName,HomeClubID,AwayClubID,HomeTeamID,AwayTeamID,HomeScore ,AwayScore ,UpdateDateUTC ,TournamentName,TournamentID ,DatetimeStartSeconds ,DivisionOrderID,ShowToAll,Final,halftime,fulltime,IsFinalScore from MobileApp_Results where ID = '" + id + "'";
     //alert(sql);
     tx.executeSql(sql, [], getMenu_success);
 }
@@ -122,7 +149,7 @@ function getMenu_success(tx, results) {
     var menu = results.rows.item(0);
 var Gameid =menu.ID;
         var res = (menu.DatetimeStart).split("T");
-
+    if(menu.IsFinalScore == 0) {
             $('#scorecard').empty().append('<Div class="mainmenuscore" >' +
                 '<div class="bold size13 floatleft" align="center"  >' + menu.HomeName + '</div><div class="bold size13 floatleft" align="center"  >' + menu.AwayName  + '</div>' +
                 '<div class="floatleft" align="center" id="homescore"  >' + menu.HomeScore + '</div><div class="floatleft"  align="center" id="awayscore"  >' + menu.AwayScore + '</div>' +
@@ -136,42 +163,67 @@ var Gameid =menu.ID;
                 '</div>' +
                 '</Div>');
 
-    if(menu.halftime !='null'){
-        if(menu.fulltime == 'null') {
+    if (menu.halftime != 'null') {
+        if (menu.fulltime == 'null') {
             $("#btnhalf").hide();
-        }else{
+            $("#btnapprove").hide();
+        } else {
+
             $("#btnfull").hide();
         }
     }
 
-    if(menu.halftime == 'null'){
-        $("#btnfull").hide();
-    }else{
+    if (menu.IsFinalScore == 0 && (menu.halftime != 'null') && (menu.fulltime != 'null')) {
 
+        if (Ref == 0) {
+            $("#btnapprove").hide();
+        } else {
+            $("#btnapprove").show();
+        }
+        if(isadmin == 1){
+            $("#btnapprove").show();
+        }
+    } else {
+        $("#btnapprove").hide();
+    }
+
+    if (menu.halftime == 'null') {
+        $("#btnfull").hide();
+        $("#btnapprove").hide();
+    } else {
         $("#btnhalf").hide();
     }
 
     getbothteams(menu.HomeClubID,menu.AwayClubID);
 
+    }else{
+        $('#scorecard').empty().append("Thanks for approving this game!");
 
+    }
 }
 
 function gamestate(IDD,id){
 
-        if (IDD == 1) {
-            db.transaction(function (tx) {
-                tx.executeSql('Update MobileApp_Results set halftime = 1 where ID = ' + id);
-                console.log("Update INTO MobileApp_Results");
-            });
+    if (IDD == 1) {
+        db.transaction(function (tx) {
+            tx.executeSql('Update MobileApp_Results set halftime = 1 where ID = ' + id);
+            console.log("Update INTO MobileApp_Results");
+        });
 
 
-        }else{
+    }else if (IDD == 2) {
 
-            db.transaction(function (tx) {
-                tx.executeSql('Update MobileApp_Results set halftime = 1, fulltime= 1 where ID = ' + id);
-                console.log("Update INTO MobileApp_Results");
-            });
-        }
+        db.transaction(function (tx) {
+            tx.executeSql('Update MobileApp_Results set halftime = 1, fulltime= 1 where ID = ' + id);
+            console.log("Update INTO MobileApp_Results");
+        });
+    }else if (IDD == 3) {
+
+        db.transaction(function (tx) {
+            tx.executeSql('Update MobileApp_Results set IsFinalScore = 1 where ID = ' + id);
+            console.log("Update INTO MobileApp_Results");
+        });
+    }
     db.transaction(getdata, errorCBfunc, successCBfunc);
     db.transaction(getscoredata, errorCBfunc, successCBfunc);
 
@@ -182,7 +234,7 @@ function gamestate(IDD,id){
 function getscoredata_success(tx, results) {
     $('#busy').hide();
     var len = results.rows.length;
-      //  alert(len);
+        alert(len);
     $('#divscore').empty()
 
     for (var i=0; i<len; i++) {

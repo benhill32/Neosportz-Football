@@ -365,7 +365,7 @@ function loadinfo_success2(tx, results) {
 
     var h = res[1].substring(0, 2)
     var d = new Date();
-    alert(isadmin + "- " + allowscore);
+  //  alert(isadmin + "- " + allowscore);
     var text =  menu.HomeName + ' vs ' + menu.AwayName +  "||" + menu.TournamentName + "||" + menu.Field;
     var text2 =menu.HomeName + ' vs ' + menu.AwayName;
 
