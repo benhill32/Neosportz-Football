@@ -231,7 +231,7 @@ function getdata(tx) {
         $('#btn1').addClass("btn btn-xs btn-default");
         $('#btn2').removeClass("btn btn-xs btn-default");
         $('#btn2').addClass("btn btn-xs btn-primary active");
-        sql = "select ID,_id,DatetimeStart,HomeName,AwayName,Field,Latitude,Longitude,DivisionID ,DivisionName,HomeClubID,AwayClubID,HomeTeamID,AwayTeamID ,UpdateDateUTC ,TournamentName,TournamentID ,DatetimeStartSeconds ,DivisionOrderID,ShowToAll,Final,Cancel from MobileApp_Schedule where  DivisionID = " + id + " and DatetimeStartSeconds >= " + midnightsec + " and DeletedateUTC = 'null' order by DatetimeStart";
+        sql = "select ID,_id,DatetimeStart,HomeName,AwayName,Field,Latitude,Longitude,DivisionID ,DivisionName,HomeClubID,AwayClubID,HomeTeamID,AwayTeamID ,UpdateDateUTC ,TournamentName,TournamentID ,DatetimeStartSeconds ,DivisionOrderID,ShowToAll,Final,Cancel,IsFinalScore from MobileApp_Schedule where  DivisionID = " + id + " and DatetimeStartSeconds >= " + midnightsec + " and DeletedateUTC = 'null' order by DatetimeStart";
 
     }else{
         $('#btn2').removeClass("btn btn-xs btn-primary active");
@@ -239,7 +239,7 @@ function getdata(tx) {
         $('#btn1').removeClass("btn btn-xs btn-default");
         $('#btn1').addClass("btn btn-xs btn-primary active");
 
-        sql = "select ID,_id,DatetimeStart,HomeName,AwayName,Field,Latitude,Longitude,DivisionID ,DivisionName,HomeClubID,AwayClubID,HomeTeamID,AwayTeamID ,UpdateDateUTC ,TournamentName,TournamentID ,DatetimeStartSeconds ,DivisionOrderID,ShowToAll,Final,Cancel from MobileApp_Schedule where (HomeClubID IN (" + listfollow + ") or AwayClubID IN (" + listfollow + ")) and DeletedateUTC= 'null' and  DivisionID = " + id + "  and DatetimeStartSeconds >= " + midnightsec + " order by DatetimeStart";
+        sql = "select ID,_id,DatetimeStart,HomeName,AwayName,Field,Latitude,Longitude,DivisionID ,DivisionName,HomeClubID,AwayClubID,HomeTeamID,AwayTeamID ,UpdateDateUTC ,TournamentName,TournamentID ,DatetimeStartSeconds ,DivisionOrderID,ShowToAll,Final,Cancel,IsFinalScore from MobileApp_Schedule where (HomeClubID IN (" + listfollow + ") or AwayClubID IN (" + listfollow + ")) and DeletedateUTC= 'null' and  DivisionID = " + id + "  and DatetimeStartSeconds >= " + midnightsec + " order by DatetimeStart";
 
     }
 
@@ -266,34 +266,49 @@ function getMenu_success(tx, results) {
      //   alert(menu.DatetimeStartSeconds);
 
         var ampm = h > 12 ? h-12 +'PM' : h +'AM';
+    if(menu.IsFinalScore ==0) {
+        if (menu.Cancel == 0) {
+        $('#divschedules').append('<Div class="mainmenuresult" align="left" >' +
+        '<div id="schleft">' +
+        '<div class="bold size13"  >' + menu.HomeName + ' vs ' + menu.AwayName +
 
-        if(menu.Cancel== 0) {
-            $('#divschedules').append('<Div class="mainmenuresult" align="left" >' +
-                '<div id="schleft">' +
-                '<div class="bold size13"  >' + menu.HomeName + ' vs ' + menu.AwayName  +
 
+        '</div>' +
 
-                '</div>' +
+        '<div class="size11">' + ampm + '  ' + day + '/' + month + '/' + year + '</div>' +
+        '<div class="size11">' + menu.TournamentName + '</div>' +
+        '<div class="size11">' + menu.Field + '</div>' +
+        '</div>' +
 
-                '<div class="size11">' + ampm + '  ' + day + '/' +  month + '/' + year + '</div>' +
-                '<div class="size11">' + menu.TournamentName + '</div>' +
-                '<div class="size11">' + menu.Field + '</div>' +
-                '</div>' +
+        '<div  id="schright" onclick="loadinfo(' + menu.ID + ')" data-toggle="modal" data-target="#basicModal">' +
+        '<img height="30px" class="imagesch"  align="right" >' +
+        '</div>' +
 
-                '<div  id="schright" onclick="loadinfo(' + menu.ID + ')" data-toggle="modal" data-target="#basicModal">' +
-                '<img height="30px" class="imagesch"  align="right" >' +
-                '</div>' +
-
-                '</Div>');
-        }else{
-            $('#divschedules').append('<Div class="mainmenuresultcancel" align="left" >' +
-                '<div class="bold size13"  >' + menu.HomeName + ' vs ' + menu.AwayName + '</div>' +
-                '<div class="size11">' + ampm + '  ' + day + '/' + month + '/' + year + '</div>' +
-                '<div class="size11">' + menu.TournamentName + ' ' + ' Cancelled ' + '</div>' +
-                '<div class="size11">' + menu.Field + '</div>' +
-                '</Div>');
+        '</Div>');
+        } else {
+        $('#divschedules').append('<Div class="mainmenuresultcancel" align="left" >' +
+        '<div class="bold size13"  >' + menu.HomeName + ' vs ' + menu.AwayName + '</div>' +
+        '<div class="size11">' + ampm + '  ' + day + '/' + month + '/' + year + '</div>' +
+        '<div class="size11">' + menu.TournamentName + ' ' + ' Cancelled ' + '</div>' +
+        '<div class="size11">' + menu.Field + '</div>' +
+        '</Div>');
 
         }
+    }else{
+        $('#divschedules').append('<Div class="mainmenuresult" align="left" >' +
+        '<div id="schleft">' +
+        '<div class="bold size13"  >' + menu.HomeName + ' vs ' + menu.AwayName +
+
+
+        '</div>' +
+
+        '<div class="size11">' + ampm + '  ' + day + '/' + month + '/' + year + '</div>' +
+        '<div class="size11">' + menu.TournamentName + '</div>' +
+        '<div class="size11">' + menu.Field + '</div>' +
+        '</div>' +
+        '</Div>');
+
+    }
     }
 }
 
