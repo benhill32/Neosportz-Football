@@ -89,7 +89,7 @@ function getplayerinfo(tx) {
 
 function getscoredata(tx) {
     var sql = "select Name,Value,UpdatedateUTC from MobileScoringTable";
-     alert(sql);
+  //   alert(sql);
     tx.executeSql(sql, [], getscoredata_success);
 }
 
@@ -160,6 +160,7 @@ var Gameid =menu.ID;
                 '<div id="divhalffull" align="center"  >' +
                 '<button id="btnhalf" class="btn btn-warning" onclick="gamestate(1,' + Gameid + ')" >Its Halftime</button><br>' +
                 '<button id="btnfull" class="btn btn-warning" onclick="gamestate(2,' + Gameid + ')" >Its Fulltime</button>' +
+                '<button id="btnapprove" class="btn btn-warning" onclick="gamestate(3,' + Gameid + ')" >Approve</button>' +
                 '</div>' +
                 '</Div>');
 
@@ -234,7 +235,7 @@ function gamestate(IDD,id){
 function getscoredata_success(tx, results) {
     $('#busy').hide();
     var len = results.rows.length;
-        alert(len);
+       // alert(len);
     $('#divscore').empty()
 
     for (var i=0; i<len; i++) {
