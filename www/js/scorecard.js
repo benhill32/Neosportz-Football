@@ -229,6 +229,7 @@ function gamestate(IDD,id){
     db.transaction(getscoredata, errorCBfunc, successCBfunc);
 
     halftimefulltimenow(id,IDD);
+    onclicksyncloaddata();
 
 }
 
