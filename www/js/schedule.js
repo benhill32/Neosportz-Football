@@ -306,6 +306,9 @@ function getMenu_success(tx, results) {
         '<div class="size11">' + menu.TournamentName + '</div>' +
         '<div class="size11">' + menu.Field + '</div>' +
         '</div>' +
+        '<div  id="schright" onclick="loadinfo(' + menu.ID + ')" data-toggle="modal" data-target="#basicModal">' +
+        '<img height="30px" class="imagesch"  align="right" >' +
+        '</div>' +
         '</Div>');
 
     }

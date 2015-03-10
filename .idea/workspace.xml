@@ -34,11 +34,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scorecard.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="scorecard.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/www/js/scorecard.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8819876" vertical-offset="2945" max-vertical-offset="5729">
-              <caret line="231" column="26" selection-start-line="231" selection-start-column="26" selection-end-line="231" selection-end-column="26" />
+            <state vertical-scroll-proportion="-3.92" vertical-offset="2945" max-vertical-offset="5729">
+              <caret line="195" column="5" selection-start-line="195" selection-start-column="5" selection-end-line="195" selection-end-column="5" />
               <folding>
                 <element signature="n#!!block;n#checkonlinescore#0" expanded="false" />
               </folding>
@@ -66,11 +66,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="schedule.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="schedule.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/www/js/schedule.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.12" vertical-offset="4550" max-vertical-offset="9724">
-              <caret line="284" column="18" selection-start-line="284" selection-start-column="18" selection-end-line="284" selection-end-column="18" />
+            <state vertical-scroll-proportion="0.31180125" vertical-offset="5801" max-vertical-offset="9775">
+              <caret line="356" column="0" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -149,8 +149,8 @@
         <option value="$PROJECT_DIR$/www/js/news.js" />
         <option value="$PROJECT_DIR$/www/js/CreateOpenDB.js" />
         <option value="$PROJECT_DIR$/www/js/functions.js" />
-        <option value="$PROJECT_DIR$/www/js/schedule.js" />
         <option value="$PROJECT_DIR$/www/js/scorecard.js" />
+        <option value="$PROJECT_DIR$/www/js/schedule.js" />
       </list>
     </option>
   </component>
@@ -283,6 +283,7 @@
     <property name="options.lastSelected" value="vcs.Git" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
@@ -325,6 +326,9 @@
     <list size="0" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="fe200443-f707-4323-ac84-9e812bd4cd02" name="Default" comment="" />
@@ -847,14 +851,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/www/js/schedule.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.12" vertical-offset="4550" max-vertical-offset="9724">
-          <caret line="284" column="18" selection-start-line="284" selection-start-column="18" selection-end-line="284" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/www/js/loaddata.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.6" vertical-offset="6600" max-vertical-offset="11611">
@@ -873,11 +869,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/www/js/scorecard.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8819876" vertical-offset="2945" max-vertical-offset="5729">
-          <caret line="231" column="26" selection-start-line="231" selection-start-column="26" selection-end-line="231" selection-end-column="26" />
+        <state vertical-scroll-proportion="-3.92" vertical-offset="2945" max-vertical-offset="5729">
+          <caret line="195" column="5" selection-start-line="195" selection-start-column="5" selection-end-line="195" selection-end-column="5" />
           <folding>
             <element signature="n#!!block;n#checkonlinescore#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/www/js/schedule.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31180125" vertical-offset="5801" max-vertical-offset="9775">
+          <caret line="356" column="0" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
